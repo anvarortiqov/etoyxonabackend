@@ -12,8 +12,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { BookingsService } from './bookings.service';
-import { CreateBookingDto, UpdateBookingDto, CancelBookingDto } from './dto';
-import { PaginationDto } from '../../common/dto';
+import { CreateBookingDto, UpdateBookingDto, CancelBookingDto, QueryBookingsDto } from './dto';
 import { JwtAuthGuard, RolesGuard } from '../../common/guards';
 import { CurrentUser, Roles } from '../../common/decorators';
 import { Role } from '../../common/enums';
@@ -40,15 +39,12 @@ export class BookingsController {
   @ApiOperation({ summary: 'Buyurtmalar ro\'yxati' })
   async findAll(
     @Param('venueId', ParseUUIDPipe) venueId: string,
-    @Query() pagination: PaginationDto,
-    @Query('status') status?: string,
-    @Query('eventDate') eventDate?: string,
-    @Query('hallId') hallId?: string,
+    @Query() query: QueryBookingsDto,
   ) {
-    return this.bookingsService.findAll(venueId, pagination, {
-      status,
-      eventDate,
-      hallId,
+    return this.bookingsService.findAll(venueId, query, {
+      status: query.status,
+      eventDate: query.eventDate,
+      hallId: query.hallId,
     });
   }
 
